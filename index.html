@@ -975,7 +975,7 @@ const writeText = (text, x, y, options = {}) => {
             doc.addPage();
           //  addHeader(doc.internal.getNumberOfPages(), 0);
             addFooter();
-            currentY = margin;
+            currentY = margin + 10;
 
             // Reapply font settings after page break
             doc.setFontSize(fontSize);
@@ -1195,7 +1195,7 @@ siteFields.forEach(field => {
                 doc.addPage();
              //   addHeader(doc.internal.getNumberOfPages(), 0);
                 addFooter();
-                yPos = margin;
+                yPos = margin + 10;
             }
             
             // Write metric label with proper wrapping
@@ -1259,7 +1259,7 @@ siteFields.forEach(field => {
                     lines.forEach(line => {
                         if (yPos > pageHeight - margin - 20) {
                             doc.addPage();
-                            yPos = margin;
+                            yPos = margin + 10;
                         }
                         doc.text(line, margin, yPos);
                         yPos += lineHeight * 1.5;
