@@ -959,31 +959,37 @@
                 const textWidth = pageWidth - (2 * margin) - 10; // Increased safety margin
                 
                 // Improved text writing function with better overflow handling
-                const writeText = (text, x, y, options = {}) => {
-                    const { maxWidth = textWidth, fontSize = bodyTextSize, fontStyle = 'normal', color = secondaryColor } = options;
-                    
-                    doc.setFontSize(fontSize);
-                    doc.setTextColor(color);
-                    doc.setFont("helvetica", fontStyle);
-                    
-                    const lines = doc.splitTextToSize(text, maxWidth);
-                    let currentY = y;
-                    
-                    for (let i = 0; i < lines.length; i++) {
-                        // Check if we need a new page (with more conservative margin)
-                        if (currentY > pageHeight - margin - 15) {
-                            doc.addPage();
-                            addHeader(doc.internal.getNumberOfPages(), 0);
-                            addFooter();
-                            currentY = margin;
-                        }
-                        
-                        doc.text(lines[i], x, currentY);
-                        currentY += lineHeight;
-                    }
-                    
-                    return currentY;
-                };
+const writeText = (text, x, y, options = {}) => {
+    const { maxWidth = textWidth, fontSize = bodyTextSize, fontStyle = 'normal', color = secondaryColor } = options;
+
+    doc.setFontSize(fontSize);
+    doc.setTextColor(color);
+    doc.setFont("helvetica", fontStyle);
+
+    const lines = doc.splitTextToSize(text, maxWidth);
+    let currentY = y;
+
+    for (let i = 0; i < lines.length; i++) {
+        // Check for page overflow
+        if (currentY > pageHeight - margin - 15) {
+            doc.addPage();
+            addHeader(doc.internal.getNumberOfPages(), 0);
+            addFooter();
+            currentY = margin;
+
+            // Reapply font settings after page break
+            doc.setFontSize(fontSize);
+            doc.setTextColor(color);
+            doc.setFont("helvetica", fontStyle);
+        }
+
+        doc.text(lines[i], x, currentY);
+        currentY += lineHeight;
+    }
+
+    return currentY;
+};
+
 
 // Function to return textarea content as-is, preserving line breaks
 const processTextarea = (text) => {
@@ -1063,7 +1069,7 @@ const processTextarea = (text) => {
                     fontSize: sectionTitleSize,
                     color: primaryColor,
                     fontStyle: 'bold'
-                }) + lineHeight;
+                }) + lineHeight * 2;
                 
                 const projectFields = [
                     { label: "Project Name", value: document.getElementById("project-name").value || "N/A" },
@@ -1095,7 +1101,7 @@ const processTextarea = (text) => {
                     fontSize: sectionTitleSize,
                     color: primaryColor,
                     fontStyle: 'bold'
-                }) + lineHeight;
+                }) + lineHeight * 2;
                 
                 // Improved flora & fauna list handling
                 const floraFauna = document.getElementById("flora-fauna").value || "N/A";
