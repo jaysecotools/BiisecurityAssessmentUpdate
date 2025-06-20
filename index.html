@@ -973,7 +973,7 @@ const writeText = (text, x, y, options = {}) => {
         // Check for page overflow
         if (currentY > pageHeight - margin - 15) {
             doc.addPage();
-            addHeader(doc.internal.getNumberOfPages(), 0);
+          //  addHeader(doc.internal.getNumberOfPages(), 0);
             addFooter();
             currentY = margin;
 
