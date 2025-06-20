@@ -1003,8 +1003,45 @@ function generatePDFReport() {
             
             return currentY;
         };
-
-        // [Previous title page content remains the same...]
+        
+        // Add title page
+        doc.setFontSize(titleSize);
+        doc.setTextColor(primaryColor);
+        doc.setFont("helvetica", "bold");
+        doc.text("Biosecurity Risk Assessment Report", pageWidth / 2, 40, { align: "center" });
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(secondaryColor); // Changed to secondary color for consistency
+        doc.setFont("helvetica", "normal");
+        
+        const projectName = document.getElementById("project-name").value || "Unnamed Project";
+        doc.text(`Project: ${projectName}`, pageWidth / 2, 60, { align: "center" });
+        
+        const assessorName = document.getElementById("assessor-name").value || "Unassigned";
+        doc.text(`Assessor: ${assessorName}`, pageWidth / 2, 70, { align: "center" });
+        
+        const assessmentDate = document.getElementById("date").value || new Date().toISOString().slice(0,10);
+        doc.text(`Date: ${assessmentDate}`, pageWidth / 2, 80, { align: "center" });
+        
+        // Add risk summary
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor);
+        doc.text("Risk Summary", pageWidth / 2, 100, { align: "center" });
+        
+        const riskScore = document.getElementById("risk-score").textContent || "0";
+        const riskLevel = document.getElementById("risk-level").textContent || "Low Risk";
+        
+        // Draw risk meter
+        const scoreWidth = (pageWidth - 2 * margin) * (parseInt(riskScore) / 100);
+        doc.setFillColor(primaryColor);
+        doc.rect(margin, 110, scoreWidth, 8, "F");
+        
+        doc.setDrawColor(secondaryColor);
+        doc.rect(margin, 110, pageWidth - 2 * margin, 8);
+        
+        doc.setFontSize(bodyTextSize);
+        doc.setTextColor(secondaryColor); // Changed to secondary color for consistency
+        doc.text(`Risk Score: ${riskScore} (${riskLevel})`, margin, 125);
         
         // Add Project Details page with improved text handling
         doc.addPage();
@@ -1154,9 +1191,59 @@ function generatePDFReport() {
             doc.addImage(chartImage, "PNG", (pageWidth - chartWidth) / 2, yPos, chartWidth, chartHeight);
             yPos += chartHeight + lineHeight;
         }
-
-        // [Rest of the PDF generation code remains similar but uses the new writeText function...]
-
+        
+        // Add Recommendations page
+        doc.addPage();
+        yPos = margin;
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor);
+        doc.text("4. Recommendations", margin, yPos);
+        yPos += lineHeight * 2;
+        
+        const recommendationsContainer = document.getElementById("recommendations");
+        if (recommendationsContainer) {
+            const recommendations = Array.from(recommendationsContainer.querySelectorAll("li")).map(li => li.textContent);
+            
+            if (recommendations.length > 0) {
+                doc.setFontSize(subHeadingSize);
+                doc.setTextColor(secondaryColor);
+                doc.text("Key Recommendations:", margin, yPos);
+                yPos += lineHeight * 1.5;
+                
+                doc.setFontSize(bodyTextSize);
+                recommendations.forEach((rec, index) => {
+                    if (yPos > pageHeight - margin - 20) {
+                        doc.addPage();
+                        yPos = margin;
+                    }
+                    
+                    // Split long recommendations into multiple lines
+                    const lines = doc.splitTextToSize(`${index + 1}. ${rec}`, pageWidth - 2 * margin - 10);
+                    lines.forEach(line => {
+                        if (yPos > pageHeight - margin - 20) {
+                            doc.addPage();
+                            yPos = margin;
+                        }
+                        doc.text(line, margin, yPos);
+                        yPos += lineHeight * 1.5;
+                    });
+                });
+            } else {
+                doc.setFontSize(bodyTextSize);
+                doc.text("No significant risks detected. Regular monitoring recommended.", margin, yPos);
+                yPos += lineHeight;
+            }
+        }
+        
+        // Add headers and footers to all pages
+        const finalPageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= finalPageCount; i++) {
+            doc.setPage(i);
+            addHeader(i, finalPageCount);
+            addFooter();
+        }
+        
         // Save the PDF
         doc.save(`${pdfName}.pdf`);
     } catch (error) {
