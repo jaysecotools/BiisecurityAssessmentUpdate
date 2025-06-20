@@ -915,314 +915,325 @@
             saveAs(blob, `Biosecurity_Risk_Assessment_${new Date().toISOString().slice(0,10)}.csv`);
         }
 
-        function generatePDFReport() {
-            const { jsPDF } = window.jspdf;
-            
-            // Ask for report name
-            const defaultName = document.getElementById("project-name").value 
-                ? `Biosecurity_Report_${document.getElementById("project-name").value.replace(/[^a-z0-9]/gi, '_')}`
-                : "Biosecurity_Risk_Report";
-            
-            const pdfName = prompt("Enter the file name for your PDF:", defaultName) || defaultName;
+function generatePDFReport() {
+    const { jsPDF } = window.jspdf;
+    
+    // Ask for report name
+    const defaultName = document.getElementById("project-name").value 
+        ? `Biosecurity_Report_${document.getElementById("project-name").value.replace(/[^a-z0-9]/gi, '_')}`
+        : "Biosecurity_Risk_Report";
+    
+    const pdfName = prompt("Enter the file name for your PDF:", defaultName) || defaultName;
 
-            try {
-                const doc = new jsPDF({
-                    orientation: "portrait",
-                    unit: "mm",
-                    format: "a4"
-                });
-                
-                // Colors
-                const primaryColor = "#007a6c"; // Teal
-                const secondaryColor = "#4a4a4a"; // Dark gray
-                const accentColor = "#e57200"; // Orange
-                
-                // Font sizes
-                const titleSize = 18;
-                const sectionTitleSize = 14;
-                const subHeadingSize = 12;
-                const bodyTextSize = 10;
-                const smallTextSize = 8;
-                
-                // Margins
-                const margin = 15;
-                const lineHeight = 6;
-                let yPos = margin;
-                
-                // Page dimensions
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                
-                // Add header
-                const addHeader = (pageNum, totalPages) => {
-                    doc.setFontSize(smallTextSize);
-                    doc.setTextColor(secondaryColor);
-                    doc.text(`Biosecurity Risk Assessment Report - Page ${pageNum} of ${totalPages}`, 
-                        pageWidth - margin, 10, { align: "right" });
-                    
-                    doc.setDrawColor(primaryColor);
-                    doc.line(margin, 15, pageWidth - margin, 15);
-                };
-                
-                // Add footer
-                const addFooter = () => {
-                    doc.setFontSize(smallTextSize);
-                    doc.setTextColor(secondaryColor);
-                    doc.text("Produced with Biosecurity Risk Assessment Tool", 
-                        margin, pageHeight - 10);
-                    doc.text(`Generated on ${new Date().toLocaleDateString()}`, 
-                        pageWidth - margin, pageHeight - 10, { align: "right" });
-                };
-                
-                // Add title page
-                doc.setFontSize(titleSize);
-                doc.setTextColor(primaryColor);
-                doc.setFont("helvetica", "bold");
-                doc.text("Biosecurity Risk Assessment Report", pageWidth / 2, 40, { align: "center" });
-                
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(secondaryColor);
-                doc.setFont("helvetica", "normal");
-                
-                const projectName = document.getElementById("project-name").value || "Unnamed Project";
-                doc.text(`Project: ${projectName}`, pageWidth / 2, 60, { align: "center" });
-                
-                const assessorName = document.getElementById("assessor-name").value || "Unassigned";
-                doc.text(`Assessor: ${assessorName}`, pageWidth / 2, 70, { align: "center" });
-                
-                const assessmentDate = document.getElementById("date").value || new Date().toISOString().slice(0,10);
-                doc.text(`Date: ${assessmentDate}`, pageWidth / 2, 80, { align: "center" });
-                
-                // Add risk summary
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(primaryColor);
-                doc.text("Risk Summary", pageWidth / 2, 100, { align: "center" });
-                
-                const riskScore = document.getElementById("risk-score").textContent || "0";
-                const riskLevel = document.getElementById("risk-level").textContent || "Low Risk";
-                
-                // Draw risk meter
-                const scoreWidth = (pageWidth - 2 * margin) * (parseInt(riskScore) / 100);
-                doc.setFillColor(primaryColor);
-                doc.rect(margin, 110, scoreWidth, 8, "F");
-                
-                doc.setDrawColor(secondaryColor);
-                doc.rect(margin, 110, pageWidth - 2 * margin, 8);
-                
-                doc.setFontSize(bodyTextSize);
-                doc.setTextColor(secondaryColor);
-                doc.text(`Risk Score: ${riskScore} (${riskLevel})`, margin, 125);
-                
-                // Add page numbers
-                const totalPages = 5; // We'll update this as we add pages
-                
-                // Add Project Details page
+    try {
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+        
+        // Colors
+        const primaryColor = "#007a6c"; // Teal
+        const secondaryColor = "#4a4a4a"; // Dark gray
+        const accentColor = "#e57200"; // Orange
+        
+        // Font sizes
+        const titleSize = 18;
+        const sectionTitleSize = 14;
+        const subHeadingSize = 12;
+        const bodyTextSize = 10;
+        const smallTextSize = 8;
+        
+        // Margins
+        const margin = 15;
+        const lineHeight = 6;
+        let yPos = margin;
+        
+        // Page dimensions
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        // Add header
+        const addHeader = (pageNum, totalPages) => {
+            doc.setFontSize(smallTextSize);
+            doc.setTextColor(secondaryColor);
+            doc.text(`Biosecurity Risk Assessment Report - Page ${pageNum} of ${totalPages}`, 
+                pageWidth - margin, 10, { align: "right" });
+            
+            doc.setDrawColor(primaryColor);
+            doc.line(margin, 15, pageWidth - margin, 15);
+        };
+        
+        // Add footer
+        const addFooter = () => {
+            doc.setFontSize(smallTextSize);
+            doc.setTextColor(secondaryColor);
+            doc.text("Produced with Biosecurity Risk Assessment Tool", 
+                margin, pageHeight - 10);
+            doc.text(`Generated on ${new Date().toLocaleDateString()}`, 
+                pageWidth - margin, pageHeight - 10, { align: "right" });
+        };
+        
+        // Add title page
+        doc.setFontSize(titleSize);
+        doc.setTextColor(primaryColor);
+        doc.setFont("helvetica", "bold");
+        doc.text("Biosecurity Risk Assessment Report", pageWidth / 2, 40, { align: "center" });
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(secondaryColor); // Changed to secondary color for consistency
+        doc.setFont("helvetica", "normal");
+        
+        const projectName = document.getElementById("project-name").value || "Unnamed Project";
+        doc.text(`Project: ${projectName}`, pageWidth / 2, 60, { align: "center" });
+        
+        const assessorName = document.getElementById("assessor-name").value || "Unassigned";
+        doc.text(`Assessor: ${assessorName}`, pageWidth / 2, 70, { align: "center" });
+        
+        const assessmentDate = document.getElementById("date").value || new Date().toISOString().slice(0,10);
+        doc.text(`Date: ${assessmentDate}`, pageWidth / 2, 80, { align: "center" });
+        
+        // Add risk summary
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor);
+        doc.text("Risk Summary", pageWidth / 2, 100, { align: "center" });
+        
+        const riskScore = document.getElementById("risk-score").textContent || "0";
+        const riskLevel = document.getElementById("risk-level").textContent || "Low Risk";
+        
+        // Draw risk meter
+        const scoreWidth = (pageWidth - 2 * margin) * (parseInt(riskScore) / 100);
+        doc.setFillColor(primaryColor);
+        doc.rect(margin, 110, scoreWidth, 8, "F");
+        
+        doc.setDrawColor(secondaryColor);
+        doc.rect(margin, 110, pageWidth - 2 * margin, 8);
+        
+        doc.setFontSize(bodyTextSize);
+        doc.setTextColor(secondaryColor); // Changed to secondary color for consistency
+        doc.text(`Risk Score: ${riskScore} (${riskLevel})`, margin, 125);
+        
+        // Add Project Details page
+        doc.addPage();
+        yPos = margin;
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor);
+        doc.text("1. Project Details", margin, yPos);
+        yPos += lineHeight * 2;
+        
+        doc.setFontSize(subHeadingSize);
+        doc.setTextColor(secondaryColor); // Changed to secondary color for consistency
+        
+        const projectFields = [
+            { label: "Project Name", value: document.getElementById("project-name").value || "N/A" },
+            { label: "Location", value: document.getElementById("location").value || "N/A" },
+            { label: "Assessor", value: document.getElementById("assessor-name").value || "N/A" },
+            { label: "Date", value: document.getElementById("date").value || "N/A" },
+            { label: "Description", value: document.getElementById("project-description").value || "N/A" },
+            { label: "Purpose", value: document.getElementById("project-purpose").value || "N/A" }
+        ];
+        
+        projectFields.forEach(field => {
+            if (yPos > pageHeight - margin - 20) {
                 doc.addPage();
                 yPos = margin;
-                
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(primaryColor);
-                doc.text("1. Project Details", margin, yPos);
-                yPos += lineHeight * 2;
-                
+            }
+            
+            doc.setFont("helvetica", "bold");
+            doc.text(`${field.label}:`, margin, yPos);
+            yPos += lineHeight;
+            
+            doc.setFont("helvetica", "normal");
+            const lines = doc.splitTextToSize(field.value, pageWidth - 2 * margin - 10); // Added -10 for padding
+            lines.forEach(line => {
+                if (yPos > pageHeight - margin - 20) {
+                    doc.addPage();
+                    yPos = margin;
+                }
+                doc.text(line, margin + 5, yPos);
+                yPos += lineHeight;
+            });
+            
+            yPos += lineHeight / 2;
+        });
+        
+        // Add Site Information page
+        doc.addPage();
+        yPos = margin;
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor); // Changed to primary color for heading
+        doc.text("2. Site Information", margin, yPos);
+        yPos += lineHeight * 2;
+        
+        const siteFields = [
+            { label: "Flora & Fauna", value: document.getElementById("flora-fauna").value || "N/A" },
+            { label: "Environmental Features", 
+              value: Array.from(document.getElementById("environmental-features").selectedOptions)
+                  .map(option => option.value).join(", ") || "N/A" },
+            { label: "Distance to Sensitive Ecosystems (km)", 
+              value: document.getElementById("distance-ecosystem").value || "N/A" },
+            { label: "Distance to Critical Infrastructure (km)", 
+              value: document.getElementById("distance-infrastructure").value || "N/A" },
+            { label: "Land Use History", 
+              value: document.getElementById("land-use-history").value || "N/A" },
+            { label: "Current Site Activities", 
+              value: document.getElementById("current-activities").value || "N/A" },
+            { label: "Site Accessibility", 
+              value: document.getElementById("accessibility").value || "N/A" }
+        ];
+        
+        siteFields.forEach(field => {
+            if (yPos > pageHeight - margin - 20) {
+                doc.addPage();
+                yPos = margin;
+            }
+            
+            doc.setFontSize(subHeadingSize);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(secondaryColor); // Changed to secondary color
+            doc.text(`${field.label}:`, margin, yPos);
+            yPos += lineHeight;
+            
+            doc.setFontSize(bodyTextSize);
+            doc.setFont("helvetica", "normal");
+            const lines = doc.splitTextToSize(field.value, pageWidth - 2 * margin - 10); // Added -10 for padding
+            lines.forEach(line => {
+                if (yPos > pageHeight - margin - 20) {
+                    doc.addPage();
+                    yPos = margin;
+                }
+                doc.text(line, margin + 5, yPos);
+                yPos += lineHeight;
+            });
+            
+            yPos += lineHeight / 2;
+        });
+        
+        // Add Risk Assessment page
+        doc.addPage();
+        yPos = margin;
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor); // Changed to primary color for heading
+        doc.text("3. Risk Assessment", margin, yPos);
+        yPos += lineHeight * 2;
+        
+        // Add risk scores table
+        const riskMetrics = [
+            { label: "Invasive Species Risk", value: document.getElementById("invasive-species").value || "0" },
+            { label: "Pathogen Spread Risk", value: document.getElementById("pathogen-spread").value || "0" },
+            { label: "Contamination Risk", value: document.getElementById("contamination").value || "0" },
+            { label: "Transportation Risk", value: document.getElementById("transportation").value || "0" },
+            { label: "Quarantine Breach Risk", value: document.getElementById("quarantine-breach").value || "0" },
+            { label: "Training Compliance", value: document.getElementById("training-compliance").value || "0" },
+            { label: "Supply Chain Risk", value: document.getElementById("supply-chain").value || "0" }
+        ];
+        
+        // Table header
+        doc.setFontSize(subHeadingSize);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(secondaryColor); // Changed to secondary color
+        doc.text("Risk Factor", margin, yPos);
+        doc.text("Score", pageWidth - margin - 20, yPos, { align: "right" });
+        yPos += lineHeight;
+        
+        doc.setDrawColor(secondaryColor);
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += lineHeight;
+        
+        // Table rows
+        doc.setFontSize(bodyTextSize);
+        doc.setFont("helvetica", "normal");
+        riskMetrics.forEach(metric => {
+            if (yPos > pageHeight - margin - 20) {
+                doc.addPage();
+                yPos = margin;
+            }
+            
+            doc.text(metric.label, margin, yPos);
+            doc.text(metric.value, pageWidth - margin - 20, yPos, { align: "right" });
+            yPos += lineHeight;
+        });
+        
+        yPos += lineHeight;
+        
+        // Add radar chart
+        const chartCanvas = document.getElementById("impact-chart");
+        if (chartCanvas) {
+            if (yPos > pageHeight - 100) {
+                doc.addPage();
+                yPos = margin;
+            }
+            
+            const chartImage = chartCanvas.toDataURL("image/png");
+            const chartWidth = 150;
+            const chartHeight = (chartCanvas.height / chartCanvas.width) * chartWidth;
+            
+            doc.addImage(chartImage, "PNG", (pageWidth - chartWidth) / 2, yPos, chartWidth, chartHeight);
+            yPos += chartHeight + lineHeight;
+        }
+        
+        // Add Recommendations page
+        doc.addPage();
+        yPos = margin;
+        
+        doc.setFontSize(sectionTitleSize);
+        doc.setTextColor(primaryColor);
+        doc.text("4. Recommendations", margin, yPos);
+        yPos += lineHeight * 2;
+        
+        const recommendationsContainer = document.getElementById("recommendations");
+        if (recommendationsContainer) {
+            const recommendations = Array.from(recommendationsContainer.querySelectorAll("li")).map(li => li.textContent);
+            
+            if (recommendations.length > 0) {
                 doc.setFontSize(subHeadingSize);
                 doc.setTextColor(secondaryColor);
+                doc.text("Key Recommendations:", margin, yPos);
+                yPos += lineHeight * 1.5;
                 
-                const projectFields = [
-                    { label: "Project Name", value: document.getElementById("project-name").value || "N/A" },
-                    { label: "Location", value: document.getElementById("location").value || "N/A" },
-                    { label: "Assessor", value: document.getElementById("assessor-name").value || "N/A" },
-                    { label: "Date", value: document.getElementById("date").value || "N/A" },
-                    { label: "Description", value: document.getElementById("project-description").value || "N/A" },
-                    { label: "Purpose", value: document.getElementById("project-purpose").value || "N/A" }
-                ];
-                
-                projectFields.forEach(field => {
+                doc.setFontSize(bodyTextSize);
+                recommendations.forEach((rec, index) => {
                     if (yPos > pageHeight - margin - 20) {
                         doc.addPage();
                         yPos = margin;
                     }
                     
-                    doc.setFont("helvetica", "bold");
-                    doc.text(`${field.label}:`, margin, yPos);
-                    yPos += lineHeight;
-                    
-                    doc.setFont("helvetica", "normal");
-                    const lines = doc.splitTextToSize(field.value, pageWidth - 2 * margin);
+                    // Split long recommendations into multiple lines
+                    const lines = doc.splitTextToSize(`${index + 1}. ${rec}`, pageWidth - 2 * margin - 10);
                     lines.forEach(line => {
                         if (yPos > pageHeight - margin - 20) {
                             doc.addPage();
                             yPos = margin;
                         }
-                        doc.text(line, margin + 5, yPos);
-                        yPos += lineHeight;
-                    });
-                    
-                    yPos += lineHeight / 2;
-                });
-                
-                // Add Site Information page
-                doc.addPage();
-                yPos = margin;
-                
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(primaryColor);
-                doc.text("2. Site Information", margin, yPos);
-                yPos += lineHeight * 2;
-                
-                const siteFields = [
-                    { label: "Flora & Fauna", value: document.getElementById("flora-fauna").value || "N/A" },
-                    { label: "Environmental Features", 
-                      value: Array.from(document.getElementById("environmental-features").selectedOptions)
-                          .map(option => option.value).join(", ") || "N/A" },
-                    { label: "Distance to Sensitive Ecosystems (km)", 
-                      value: document.getElementById("distance-ecosystem").value || "N/A" },
-                    { label: "Distance to Critical Infrastructure (km)", 
-                      value: document.getElementById("distance-infrastructure").value || "N/A" },
-                    { label: "Land Use History", 
-                      value: document.getElementById("land-use-history").value || "N/A" },
-                    { label: "Current Site Activities", 
-                      value: document.getElementById("current-activities").value || "N/A" },
-                    { label: "Site Accessibility", 
-                      value: document.getElementById("accessibility").value || "N/A" }
-                ];
-                
-                siteFields.forEach(field => {
-                    if (yPos > pageHeight - margin - 20) {
-                        doc.addPage();
-                        yPos = margin;
-                    }
-                    
-                    doc.setFont("helvetica", "bold");
-                    doc.text(`${field.label}:`, margin, yPos);
-                    yPos += lineHeight;
-                    
-                    doc.setFont("helvetica", "normal");
-                    const lines = doc.splitTextToSize(field.value, pageWidth - 2 * margin);
-                    lines.forEach(line => {
-                        if (yPos > pageHeight - margin - 20) {
-                            doc.addPage();
-                            yPos = margin;
-                        }
-                        doc.text(line, margin + 5, yPos);
-                        yPos += lineHeight;
-                    });
-                    
-                    yPos += lineHeight / 2;
-                });
-                
-                // Add Risk Assessment page
-                doc.addPage();
-                yPos = margin;
-                
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(primaryColor);
-                doc.text("3. Risk Assessment", margin, yPos);
-                yPos += lineHeight * 2;
-                
-                // Add risk scores table
-                const riskMetrics = [
-                    { label: "Invasive Species Risk", value: document.getElementById("invasive-species").value || "0" },
-                    { label: "Pathogen Spread Risk", value: document.getElementById("pathogen-spread").value || "0" },
-                    { label: "Contamination Risk", value: document.getElementById("contamination").value || "0" },
-                    { label: "Transportation Risk", value: document.getElementById("transportation").value || "0" },
-                    { label: "Quarantine Breach Risk", value: document.getElementById("quarantine-breach").value || "0" },
-                    { label: "Training Compliance", value: document.getElementById("training-compliance").value || "0" },
-                    { label: "Supply Chain Risk", value: document.getElementById("supply-chain").value || "0" }
-                ];
-                
-                // Table header
-                doc.setFont("helvetica", "bold");
-                doc.text("Risk Factor", margin, yPos);
-                doc.text("Score", pageWidth - margin - 20, yPos, { align: "right" });
-                yPos += lineHeight;
-                
-                doc.setDrawColor(secondaryColor);
-                doc.line(margin, yPos, pageWidth - margin, yPos);
-                yPos += lineHeight;
-                
-                // Table rows
-                doc.setFont("helvetica", "normal");
-                riskMetrics.forEach(metric => {
-                    if (yPos > pageHeight - margin - 20) {
-                        doc.addPage();
-                        yPos = margin;
-                    }
-                    
-                    doc.text(metric.label, margin, yPos);
-                    doc.text(metric.value, pageWidth - margin - 20, yPos, { align: "right" });
-                    yPos += lineHeight;
-                });
-                
-                yPos += lineHeight;
-                
-                // Add radar chart
-                const chartCanvas = document.getElementById("impact-chart");
-                if (chartCanvas) {
-                    if (yPos > pageHeight - 100) {
-                        doc.addPage();
-                        yPos = margin;
-                    }
-                    
-                    const chartImage = chartCanvas.toDataURL("image/png");
-                    const chartWidth = 150;
-                    const chartHeight = (chartCanvas.height / chartCanvas.width) * chartWidth;
-                    
-                    doc.addImage(chartImage, "PNG", (pageWidth - chartWidth) / 2, yPos, chartWidth, chartHeight);
-                    yPos += chartHeight + lineHeight;
-                }
-                
-                // Add Recommendations page
-                doc.addPage();
-                yPos = margin;
-                
-                doc.setFontSize(sectionTitleSize);
-                doc.setTextColor(primaryColor);
-                doc.text("4. Recommendations", margin, yPos);
-                yPos += lineHeight * 2;
-                
-                const recommendationsContainer = document.getElementById("recommendations");
-                if (recommendationsContainer) {
-                    const recommendations = Array.from(recommendationsContainer.querySelectorAll("li")).map(li => li.textContent);
-                    
-                    if (recommendations.length > 0) {
-                        doc.setFontSize(subHeadingSize);
-                        doc.setTextColor(secondaryColor);
-                        doc.text("Key Recommendations:", margin, yPos);
+                        doc.text(line, margin, yPos);
                         yPos += lineHeight * 1.5;
-                        
-                        doc.setFontSize(bodyTextSize);
-                        recommendations.forEach((rec, index) => {
-                            if (yPos > pageHeight - margin - 20) {
-                                doc.addPage();
-                                yPos = margin;
-                            }
-                            
-                            doc.text(`${index + 1}. ${rec}`, margin, yPos, { maxWidth: pageWidth - 2 * margin });
-                            yPos += lineHeight * 1.5;
-                        });
-                    } else {
-                        doc.setFontSize(bodyTextSize);
-                        doc.text("No significant risks detected. Regular monitoring recommended.", margin, yPos);
-                        yPos += lineHeight;
-                    }
-                }
-                
-                // Add headers and footers to all pages
-                const finalPageCount = doc.internal.getNumberOfPages();
-                for (let i = 1; i <= finalPageCount; i++) {
-                    doc.setPage(i);
-                    addHeader(i, finalPageCount);
-                    addFooter();
-                }
-                
-                // Save the PDF
-                doc.save(`${pdfName}.pdf`);
-            } catch (error) {
-                alert("An error occurred during PDF generation: " + error.message);
-                console.error(error);
+                    });
+                });
+            } else {
+                doc.setFontSize(bodyTextSize);
+                doc.text("No significant risks detected. Regular monitoring recommended.", margin, yPos);
+                yPos += lineHeight;
             }
         }
+        
+        // Add headers and footers to all pages
+        const finalPageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= finalPageCount; i++) {
+            doc.setPage(i);
+            addHeader(i, finalPageCount);
+            addFooter();
+        }
+        
+        // Save the PDF
+        doc.save(`${pdfName}.pdf`);
+    } catch (error) {
+        alert("An error occurred during PDF generation: " + error.message);
+        console.error(error);
+    }
+}
 
         function clearAllData() {
             if (confirm("Are you sure you want to delete all data? This action cannot be undone.")) {
