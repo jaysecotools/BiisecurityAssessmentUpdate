@@ -1103,21 +1103,23 @@ const processTextarea = (text) => {
                     fontStyle: 'bold'
                 }) + lineHeight * 2;
                 
-                // Improved flora & fauna list handling
-                const floraFauna = document.getElementById("flora-fauna").value || "N/A";
-                const floraItems = floraFauna.split('\n').filter(item => item.trim() !== '');
-                if (floraItems.length > 0) {
-                    yPos = writeText("Flora & Fauna:", margin, yPos, {
-                        fontSize: subHeadingSize,
-                        fontStyle: 'bold'
-                    });
-                    
-                    floraItems.forEach(item => {
-                        yPos = writeText(`• ${item.trim()}`, margin + 5, yPos) + paragraphSpacing;
-                    });
-                } else {
-                    yPos = writeText("Flora & Fauna: N/A", margin, yPos) + paragraphSpacing;
-                }
+// Improved flora & fauna list handling
+const floraFauna = document.getElementById("flora-fauna").value || "N/A";
+const floraItems = floraFauna.split('\n').filter(item => item.trim() !== '');
+if (floraItems.length > 0) {
+    yPos = writeText("Flora & Fauna:", margin, yPos, {
+        fontSize: subHeadingSize,
+        fontStyle: 'bold'
+    });
+
+    floraItems.forEach(item => {
+        yPos = writeText(item.trim(), margin + 5, yPos); // Removed bullet point
+        yPos += 2; // Reduced line spacing, you can adjust this value as needed
+    });
+} else {
+    yPos = writeText("Flora & Fauna: N/A", margin, yPos) + paragraphSpacing;
+}
+
                 
 const siteFields = [
     { label: "Environmental Features", 
