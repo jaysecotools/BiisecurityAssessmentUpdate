@@ -1062,7 +1062,7 @@ const processTextarea = (text) => {
                 // Add Project Details page
                 doc.addPage();
                 yPos = margin;
-                addHeader(2, 0);
+               // addHeader(2, 0);
                 addFooter();
                 
                 yPos = writeText("1. Project Details", margin, yPos, {
@@ -1094,7 +1094,7 @@ const processTextarea = (text) => {
                 // Add Site Information page with improved list handling
                 doc.addPage();
                 yPos = margin;
-                addHeader(3, 0);
+             //   addHeader(3, 0);
                 addFooter();
                 
                 yPos = writeText("2. Site Information", margin, yPos, {
@@ -1154,7 +1154,7 @@ siteFields.forEach(field => {
         // Add Risk Assessment page with improved table layout
         doc.addPage();
         yPos = margin;
-        addHeader(4, 0);
+     //   addHeader(4, 0);
         addFooter();
         
         yPos = writeText("3. Risk Assessment", margin, yPos, {
@@ -1193,7 +1193,7 @@ siteFields.forEach(field => {
         riskMetrics.forEach(metric => {
             if (yPos > pageHeight - margin - 10) {
                 doc.addPage();
-                addHeader(doc.internal.getNumberOfPages(), 0);
+             //   addHeader(doc.internal.getNumberOfPages(), 0);
                 addFooter();
                 yPos = margin;
             }
