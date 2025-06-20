@@ -1061,7 +1061,7 @@ const processTextarea = (text) => {
                 
                 // Add Project Details page
                 doc.addPage();
-                yPos = margin;
+                yPos = margin + 10;
                // addHeader(2, 0);
                 addFooter();
                 
@@ -1093,7 +1093,7 @@ const processTextarea = (text) => {
 
                 // Add Site Information page with improved list handling
                 doc.addPage();
-                yPos = margin;
+                yPos = margin + 10;
              //   addHeader(3, 0);
                 addFooter();
                 
@@ -1153,7 +1153,7 @@ siteFields.forEach(field => {
 
         // Add Risk Assessment page with improved table layout
         doc.addPage();
-        yPos = margin;
+        yPos = margin + 10;
      //   addHeader(4, 0);
         addFooter();
         
@@ -1230,7 +1230,7 @@ siteFields.forEach(field => {
         
         // Add Recommendations page
         doc.addPage();
-        yPos = margin;
+        yPos = margin + 10;
         
         doc.setFontSize(sectionTitleSize);
         doc.setTextColor(primaryColor);
@@ -1251,7 +1251,7 @@ siteFields.forEach(field => {
                 recommendations.forEach((rec, index) => {
                     if (yPos > pageHeight - margin - 20) {
                         doc.addPage();
-                        yPos = margin;
+                        yPos = margin + 10;
                     }
                     
                     // Split long recommendations into multiple lines
