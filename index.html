@@ -985,11 +985,12 @@
                     return currentY;
                 };
 
-                // Function to process textarea content with proper line breaks
-                const processTextarea = (text) => {
-                    if (!text) return "N/A";
-                    return text.replace(/\n/g, ', ').replace(/, , /g, ', ').replace(/, $/, '');
-                };
+// Function to return textarea content as-is, preserving line breaks
+const processTextarea = (text) => {
+    if (!text) return "N/A";
+    return text.trim();
+};
+
 
                 // Add header
                 const addHeader = (pageNum, totalPages) => {
@@ -1112,32 +1113,37 @@
                     yPos = writeText("Flora & Fauna: N/A", margin, yPos) + paragraphSpacing;
                 }
                 
-                const siteFields = [
-                    { label: "Environmental Features", 
-                      value: Array.from(document.getElementById("environmental-features").selectedOptions)
-                          .map(option => option.value).join(", ") || "N/A" },
-                    { label: "Distance to Sensitive Ecosystems (km)", 
-                      value: document.getElementById("distance-ecosystem").value || "N/A" },
-                    { label: "Distance to Critical Infrastructure (km)", 
-                      value: document.getElementById("distance-infrastructure").value || "N/A" },
-                    { label: "Land Use History", 
-                      value: processTextarea(document.getElementById("land-use-history").value) },
-                    { label: "Current Site Activities", 
-                      value: processTextarea(document.getElementById("current-activities").value) },
-                    { label: "Site Accessibility", 
-                      value: document.getElementById("accessibility").value || "N/A" }
-                ];
-                
-                siteFields.forEach(field => {
-                    // Write label
-                    yPos = writeText(`${field.label}:`, margin, yPos, {
-                        fontSize: subHeadingSize,
-                        fontStyle: 'bold'
-                    });
-                    
-                    // Write value with proper wrapping
-                    yPos = writeText(field.value, margin + 5, yPos) + paragraphSpacing;
-                });
+const siteFields = [
+    { label: "Environmental Features", 
+      value: Array.from(document.getElementById("environmental-features").selectedOptions)
+          .map(option => option.value).join(", ") || "N/A" },
+    { label: "Distance to Sensitive Ecosystems (km)", 
+      value: document.getElementById("distance-ecosystem").value || "N/A" },
+    { label: "Distance to Critical Infrastructure (km)", 
+      value: document.getElementById("distance-infrastructure").value || "N/A" },
+    { label: "Land Use History", 
+      value: processTextarea(document.getElementById("land-use-history").value) },
+    { label: "Current Site Activities", 
+      value: processTextarea(document.getElementById("current-activities").value) },
+    { label: "Site Accessibility", 
+      value: document.getElementById("accessibility").value || "N/A" }
+];
+
+siteFields.forEach(field => {
+    // Write label
+    yPos = writeText(`${field.label}:`, margin, yPos, {
+        fontSize: subHeadingSize,
+        fontStyle: 'bold'
+    });
+
+    // Write each line of the value individually
+    const lines = field.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+    lines.forEach(line => {
+        yPos = writeText(line, margin + 5, yPos) + paragraphSpacing;
+    });
+});
+
 
         // Add Risk Assessment page with improved table layout
         doc.addPage();
